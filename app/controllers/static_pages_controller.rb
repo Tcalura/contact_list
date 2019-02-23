@@ -5,6 +5,10 @@ class StaticPagesController < ApplicationController
     @page = 'hello'
   end
 
+  def sobre; end
+
+  def contato; end
+
   def show
     @page = page.find(params[:id])
   end
