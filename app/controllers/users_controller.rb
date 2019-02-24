@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-
   # GET /contacts/new
   def new
     @user = User.new
@@ -26,17 +25,18 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    user = user.find(user_params)
+    User.find(user_params).destroy
   end
 
   private
-    def user_params
-      params.require(:user).permit(
-        :name,
-        :email,
-        :password,
-        :password_confirmation
-        # :password
-      )
-    end
+
+  def user_params
+    params.require(:user).permit(
+      :name,
+      :email,
+      :password,
+      :password_confirmation
+      # :password
+    )
+  end
 end
