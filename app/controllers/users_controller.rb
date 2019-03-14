@@ -6,6 +6,10 @@ class UsersController < ApplicationController
     @user = User.new
   end
 
+  def show
+    @contacts = current_user.contacts
+  end
+
   def create
     @user = User.new(user_params)
     if @user.save

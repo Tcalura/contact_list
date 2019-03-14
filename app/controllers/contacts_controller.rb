@@ -1,17 +1,14 @@
 # frozen_string_literal: true
 
 class ContactsController < ApplicationController
+  before_action :require_logger_in_user
   before_action :set_contact, only: %i[show edit update destroy]
 
   # GET /contacts
   # GET /contacts.json
   def index
-    @contacts = Contact.all
+    @contacts = current_user.contacts
   end
-
-  # GET /contacts/1
-  # GET /contacts/1.json
-  def show; end
 
   # GET /contacts/new
   def new
@@ -24,15 +21,13 @@ class ContactsController < ApplicationController
   # POST /contacts
   # POST /contacts.json
   def create
-    @contact = Contact.new(contact_params)
+    @contact = current_user.contacts.build(contact_params)
 
     respond_to do |format|
       if @contact.save
-        format.html { redirect_to @contact, notice: 'Contact was successfully created.' }
-        format.json { render :show, status: :created, location: @contact }
+        format.html { redirect_to user_contacts_path, notice: 'Contact was successfully created.' }
       else
         format.html { render :new }
-        format.json { render json: @contact.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -42,11 +37,9 @@ class ContactsController < ApplicationController
   def update
     respond_to do |format|
       if @contact.update(contact_params)
-        format.html { redirect_to @contact, notice: 'Contact was successfully updated.' }
-        format.json { render :show, status: :ok, location: @contact }
+        format.html { redirect_to user_contacts_path, notice: 'Contact was successfully updated.' }
       else
         format.html { render :edit }
-        format.json { render json: @contact.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -56,8 +49,7 @@ class ContactsController < ApplicationController
   def destroy
     @contact.destroy
     respond_to do |format|
-      format.html { redirect_to contacts_url, notice: 'Contact was successfully destroyed.' }
-      format.json { head :no_content }
+      format.html { redirect_to user_contacts_path, notice: 'Contact was successfully destroyed.' }
     end
   end
 
@@ -65,7 +57,7 @@ class ContactsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_contact
-    @contact = Contact.find(params[:id])
+    @contact = current_user.contacts.find(params[:id])
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
